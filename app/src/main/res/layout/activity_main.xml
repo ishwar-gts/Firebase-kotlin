@@ -13,12 +13,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Register Yourself"
-            app:layout_constraintBottom_toTopOf="@id/emailEditText"
+            app:layout_constraintBottom_toTopOf="@id/profileViewCard"
 
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:layout_marginBottom="30dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/profileViewCard"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="250dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/nameEditText"
+            app:layout_constraintStart_toStartOf="@id/nameEditText"
+            app:layout_constraintEnd_toEndOf="@id/nameEditText"
+            android:layout_marginBottom="20dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="250dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/profileView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_profile"
+                    android:scaleType="fitCenter"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.cardview.widget.CardView>
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toTopOf="@id/emailEditText"
+            android:background="@drawable/textfield_bg"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="Enter Your Name"
+            android:padding="10dp"/>
 
         <EditText
             android:id="@+id/emailEditText"
@@ -29,6 +69,7 @@
             android:layout_marginBottom="12dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+
             android:hint="Enter Email Address"
             android:padding="10dp"/>
 
@@ -39,7 +80,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/textfield_bg"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
+
             app:layout_constraintStart_toStartOf="@id/emailEditText"
             app:layout_constraintEnd_toEndOf="@id/emailEditText"
             android:hint="Enter Password"
@@ -72,6 +114,16 @@
             android:layout_marginTop="30dp"
 
             />
+
+        <TextView
+            android:id="@+id/AlreadyAccountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="60dp"
+            android:text="Already Have An Account ? Login "/>
 
 
 
