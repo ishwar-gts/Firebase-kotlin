@@ -13,11 +13,14 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
+import com.example.learningproject.constant.Constant
+import com.example.learningproject.constant.PreferenceManager
 
 import com.example.learningproject.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.awaitAll
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -47,11 +50,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    override fun onStart() {
+        PreferenceManager.initLocalDatabase(this)
+        val name:String=PreferenceManager.getString(Constant.name)
+        if(name.isNotEmpty()){
+            startActivity(Intent(this,HomeScreen::class.java))
+        }
+        super.onStart()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        PreferenceManager.initLocalDatabase(this)
         binding.signUpButton.setOnClickListener {
             registerUser()
         }
@@ -63,6 +75,10 @@ class MainActivity : AppCompatActivity() {
                 fileAccess.launch(intent)
 
             }
+        }
+        binding.AlreadyAccountText.setOnClickListener {
+            val intent=Intent(this,LoginActivity::class.java)
+            startActivity(intent)
         }
 
 
@@ -94,8 +110,9 @@ class MainActivity : AppCompatActivity() {
                 binding.progressCircular.visibility= View.GONE
                 binding.signUpButton.visibility= View.VISIBLE
             }.addOnSuccessListener {
-                uploadUserInfoToFirestore(binding.nameEditText.text.toString(),binding.emailEditText.text.toString(),binding.passwordEditTest.text.toString())
+                uploadUserInfoToFirestore(binding.nameEditText.text.toString(),binding.emailEditText.text.toString(),binding.passwordEditTest.text.toString(),it.user!!.uid)
                 Toast.makeText(this, it.user?.email, Toast.LENGTH_SHORT).show()
+
             }.addOnFailureListener{
                 Log.d("Failure","failred reason ${it.toString()}")
             }
@@ -130,16 +147,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun uploadUserInfoToFirestore(name:String,email:String,password:String){
+    private fun uploadUserInfoToFirestore(name:String,email:String,password:String,docId:String){
         val map= mutableMapOf<String,String>()
         map.put("name",name)
         map.put("email",email)
         map.put("password",password)
         map.put("profileUrl",profileUrl)
-        dataBase.collection("user").add(map).addOnSuccessListener {
+        dataBase.collection(Constant.firebaseUserCollection).document(docId).set(map).addOnSuccessListener {
             Toast.makeText(this, "Data Added Successfully", Toast.LENGTH_SHORT).show()
             binding.progressCircular.visibility= View.GONE
             binding.signUpButton.visibility= View.VISIBLE
+            PreferenceManager.setString(Constant.name,name)
+            PreferenceManager.setString(Constant.email,email)
+            PreferenceManager.setString(Constant.profileImage,profileUrl)
+            Log.d("Preference Manager Data", "Local Database: ${PreferenceManager.getString(Constant.email)}")
+            val intent=Intent(this,LoginActivity::class.java)
+            startActivity(intent)
         }.addOnCompleteListener{
             Toast.makeText(this, "Task Complete", Toast.LENGTH_SHORT).show()
             binding.progressCircular.visibility= View.GONE
