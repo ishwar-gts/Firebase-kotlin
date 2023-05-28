@@ -1,60 +1,108 @@
 package com.example.learningproject.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.learningproject.HomeScreen
 import com.example.learningproject.R
+import com.example.learningproject.constant.ConstantValue
+import com.example.learningproject.constant.PreferenceManager
+import com.example.learningproject.databinding.FragmentEmailBinding
+import com.example.learningproject.util.Constant
+import com.example.learningproject.util.LoadingDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [EmailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EmailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentEmailBinding
+    private val database:FirebaseFirestore=FirebaseFirestore.getInstance()
+    private val auth:FirebaseAuth=FirebaseAuth.getInstance()
+    private lateinit var loader: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_email, container, false)
-    }
+    ): View {
+        binding = FragmentEmailBinding.inflate(layoutInflater, container, false)
+        loader= LoadingDialog(requireActivity(),"")
+        binding.loginBtn.setOnClickListener {
+            if (binding.emailEditText.text.isEmpty()) {
+                Constant.showMsg("Please enter email", requireContext())
+            } else {
+                binding.emailText.text = "Password"
+                binding.emailEditText.visibility = View.GONE
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EmailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EmailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                binding.passwordEditTest.visibility = View.VISIBLE
+                val email=binding.emailEditText.text.toString()
+                val password=binding.passwordEditTest.text.toString()
+
+                if(password.isNotEmpty() && password.length>6){
+                    loginToAccount(email,password)
+                }else{
+                    Constant.showMsg("Please Enter correct Password",requireContext())
                 }
             }
+        }
+        return binding.root
+    }
+
+
+
+    private fun loginToAccount(email: String, password: String) {
+        loader.setLoadingText("wait...")
+        loader.startLoadingDialog()
+       auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+            Constant.showMsg("Login Successfully",requireContext())
+            getDataFromFirestore(it.user!!.uid)
+        }.addOnCompleteListener {
+            Constant.showMsg("Login Task Complete",requireContext())
+
+
+        }.addOnCanceledListener {
+           loader.dismiss()
+            Constant.showMsg("Login Canceled",requireContext())
+
+
+        }.addOnFailureListener {
+           loader.dismiss()
+            Constant.showMsg("Login Failure Listener\", \"loginToAccount: $it",requireContext())
+
+        }
+    }
+
+    private fun getDataFromFirestore(docId: String) {
+        database.collection(ConstantValue.firebaseUserCollection).document(docId).get()
+            .addOnSuccessListener {
+
+                val name: String = it.get("name").toString()
+                val email: String = it.get("email").toString()
+                val profileImage: String = it.get("profileUrl").toString()
+                val mobileNumber: String = it.get(ConstantValue.mobileNumber).toString()
+                val userId:String=it.get(ConstantValue.userid).toString()
+                Log.d("Login uid ", "getDataFromFirestore: $userId")
+                PreferenceManager.setString(ConstantValue.name, name)
+                PreferenceManager.setString(ConstantValue.email, email)
+                PreferenceManager.setString(ConstantValue.profileImage, profileImage)
+                PreferenceManager.setString(ConstantValue.mobileNumber, mobileNumber)
+                PreferenceManager.setString(ConstantValue.userid,userId)
+                Log.d(
+                    "Preference Manager Data",
+                    "Local Database: ${PreferenceManager.getString(ConstantValue.email)}"
+                )
+                loader.dismiss()
+                startActivity(Intent(requireActivity(), HomeScreen::class.java))
+
+            }.addOnFailureListener {
+                loader.dismiss()
+        }
     }
 }
+
+
+
+

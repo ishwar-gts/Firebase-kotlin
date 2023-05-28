@@ -3,17 +3,11 @@ package com.example.learningproject
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
-import com.example.learningproject.constant.Constant
-import com.example.learningproject.constant.PreferenceManager
 import com.example.learningproject.databinding.ActivityLoginBinding
 import com.example.learningproject.fragment.FragmentPageAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
@@ -64,6 +58,8 @@ class LoginActivity : AppCompatActivity() {
             val intent= Intent(this,MainActivity::class.java)
             startActivity(intent)
         }
+
+
 //        binding.loginBtn.setOnClickListener {
 //            val email=binding.emailEditText.text.toString()
 //            val password=binding.passwordEditTest.text.toString()

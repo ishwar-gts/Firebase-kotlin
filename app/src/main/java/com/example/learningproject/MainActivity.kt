@@ -9,21 +9,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
-import com.example.learningproject.constant.Constant
+import com.example.learningproject.constant.ConstantValue
 import com.example.learningproject.constant.PreferenceManager
 
 import com.example.learningproject.databinding.ActivityMainBinding
 import com.example.learningproject.util.LoadingDialog
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.hbb20.CountryCodePicker
-import kotlinx.coroutines.awaitAll
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -56,9 +53,9 @@ private lateinit var loader:LoadingDialog
 
     override fun onStart() {
         PreferenceManager.initLocalDatabase(this)
-        val name:String=PreferenceManager.getString(Constant.name)
+        val name:String=PreferenceManager.getString(ConstantValue.name)
         if(name.isNotEmpty() && name!="user"){
-            startActivity(Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this,HomeScreen::class.java))
         }
 
         super.onStart()
@@ -145,7 +142,7 @@ private lateinit var loader:LoadingDialog
 
                         }.addOnSuccessListener {
 
-                            uploadUserInfoToFirestore(binding.nameEditText.text.toString(),binding.emailEditText.text.toString(),binding.passwordEditTest.text.toString(),it.user!!.uid,ccp.fullNumber)
+                            uploadUserInfoToFirestore(binding.nameEditText.text.toString(),binding.emailEditText.text.toString(),binding.passwordEditTest.text.toString(),it.user!!.uid,ccp.fullNumberWithPlus)
                             Toast.makeText(this, it.user?.email, Toast.LENGTH_SHORT).show()
 
                         }.addOnFailureListener{
@@ -163,7 +160,7 @@ private lateinit var loader:LoadingDialog
     }
 
     private fun uploadFile(byteArray: ByteArray){
-
+        Log.d("call function", "uploadFile: ")
         loader.setLoadingText("Uploading...")
         loader.startLoadingDialog()
         val storageRef=storage.reference
@@ -203,22 +200,27 @@ private lateinit var loader:LoadingDialog
     }
 
     private fun uploadUserInfoToFirestore(name:String,email:String,password:String,docId:String,phoneNumber: String){
+        Log.d("user doc id ", "uploadUserInfoToFirestore: ${docId}")
         val map= mutableMapOf<String,String>()
         map.put("name",name)
         map.put("email",email)
         map.put("password",password)
         map.put("mobileNumber",phoneNumber)
         map.put("profileUrl",profileUrl)
-        dataBase.collection(Constant.firebaseUserCollection).document(docId).set(map).addOnSuccessListener {
+        map.put("userId",docId)
+
+        dataBase.collection(ConstantValue.firebaseUserCollection).document(docId).set(map).addOnSuccessListener {
             Toast.makeText(this, "Data Added Successfully", Toast.LENGTH_SHORT).show()
-            PreferenceManager.setString(Constant.name,name)
-            PreferenceManager.setString(Constant.email,email)
-            PreferenceManager.setString(Constant.profileImage,profileUrl)
-            PreferenceManager.setString(Constant.mobileNumber,phoneNumber)
-            Log.d("Preference Manager Data", "Local Database: ${PreferenceManager.getString(Constant.email)}")
+            PreferenceManager.setString(ConstantValue.name,name)
+            PreferenceManager.setString(ConstantValue.email,email)
+            PreferenceManager.setString(ConstantValue.profileImage,profileUrl)
+            PreferenceManager.setString(ConstantValue.mobileNumber,phoneNumber)
+            PreferenceManager.setString(ConstantValue.userid,docId)
+
+            Log.d("Preference Manager Data", "Local Database: ${PreferenceManager.getString(ConstantValue.email)}")
             loader.dismiss()
-//            val intent=Intent(this,LoginActivity::class.java)
-//            startActivity(intent)
+            val intent=Intent(this,HomeScreen::class.java)
+            startActivity(intent)
         }.addOnCompleteListener{
             loader.dismiss()
             Toast.makeText(this, "Task Complete", Toast.LENGTH_SHORT).show()
@@ -226,7 +228,7 @@ private lateinit var loader:LoadingDialog
         }.addOnFailureListener{
             loader.dismiss()
             Toast.makeText(this, "Task Upload Failed ${it.toString()}", Toast.LENGTH_SHORT).show()
-            Log.d("Failure","failred reason ${it.toString()}")
+            Log.d("Failure","failed reason ${it.toString()}")
 
             binding.signUpButton.visibility= View.VISIBLE
         }
@@ -242,7 +244,7 @@ private lateinit var loader:LoadingDialog
        loader.setLoadingText("wait...")
        loader.startLoadingDialog()
 
-       dataBase.collection(Constant.firebaseUserCollection).whereEqualTo(Constant.email,binding.emailEditText.text.toString()).get().let {
+       dataBase.collection(ConstantValue.firebaseUserCollection).whereEqualTo(ConstantValue.email,binding.emailEditText.text.toString()).get().let {
            it.addOnSuccessListener {
                if(it.documents.size>0){
 
@@ -266,7 +268,7 @@ private lateinit var loader:LoadingDialog
 
     private fun checkPhoneNumberExit(phoneNumber: String,call:()->Unit){
 
-       dataBase.collection(Constant.firebaseUserCollection).whereEqualTo(Constant.mobileNumber,phoneNumber).get().let {
+       dataBase.collection(ConstantValue.firebaseUserCollection).whereEqualTo(ConstantValue.mobileNumber,phoneNumber).get().let {
            it.addOnSuccessListener {
                if(it.documents.size>0){
 

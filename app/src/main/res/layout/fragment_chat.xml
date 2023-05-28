@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.ChatFragment"
+    android:background="@color/primary_dark">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/profileLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/primary_dark">
+
+        <androidx.cardview.widget.CardView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            android:id="@+id/profileViewCard"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:cardCornerRadius="300dp"
+            app:cardBackgroundColor="@color/white"
+            android:layout_marginStart="15dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="250dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/profileView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_profile"
+                    android:scaleType="fitCenter"/>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/lato_bold"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintStart_toEndOf="@id/profileViewCard"
+            app:layout_constraintTop_toTopOf="@id/profileViewCard"
+            app:layout_constraintBottom_toBottomOf="@id/profileViewCard"
+            android:layout_marginStart="15dp" />
+
+        <TextView
+            android:id="@+id/online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/name"
+            android:text="Online"
+            android:fontFamily="@font/lato_bold"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            android:textColor="#11E8D4"/>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/profileLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/chat_background">
+
+
+        <ImageView
+            android:id="@+id/chatImg"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintStart_toStartOf="@id/tv"
+            app:layout_constraintEnd_toEndOf="@id/tv"
+            android:src="@drawable/no_conversation_bg"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="70dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You didn't made any conversational yet"
+            app:layout_constraintTop_toBottomOf="@id/chatImg"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/secondry_text"
+            android:textSize="15sp"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/startConversation"
+            app:layout_constraintTop_toBottomOf="@id/tv"
+            android:background="@drawable/button_background"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Start Conversation"
+            app:backgroundTint="@null"
+            android:textStyle="bold"
+            android:fontFamily="@font/lato_bold"
+            android:textColor="@color/white"/>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

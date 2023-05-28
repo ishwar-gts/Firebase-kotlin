@@ -3,17 +3,31 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable-v24/profile.xml" value="0.169" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/button_background.xml" value="0.2115" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/chat_background.xml" value="0.169" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/chat_tile.xml" value="0.169" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/edit_text_bg.xml" value="0.25" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/loader.xml" value="0.1675" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/send_view.xml" value="0.169" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/tab_indicator.xml" value="0.16" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/drawable/textfield_bg.xml" value="0.2115" />
-        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/activity_home_screen.xml" value="0.19010416666666666" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/font/font.xml" value="0.19649122807017544" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/font/lato.xml" value="0.19649122807017544" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/activity_chat_screen.xml" value="0.22" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/activity_home_screen.xml" value="0.25" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/activity_user.xml" value="0.25" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/chat_layout.xml" value="0.25" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/custom_loader.xml" value="0.25" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/fragment_auth.xml" value="0.25" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/fragment_chat.xml" value="0.2" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/fragment_email.xml" value="0.25" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/fragment_map.xml" value="0.20416666666666666" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/fragment_profile.xml" value="0.20416666666666666" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/layout/user_layout.xml" value="0.5" />
+        <entry key="..\:/F/Firebase-kotlin/app/src/main/res/menu/bottom_nav.xml" value="0.22" />
         <entry key="..\:/F/Firebase-kotlin/app/src/main/res/xml/my_dialog.xml" value="0.20416666666666666" />
       </map>
     </option>
