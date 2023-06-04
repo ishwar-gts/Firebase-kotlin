@@ -55,8 +55,8 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+
             android:fontFamily="@font/lato_bold"
-            android:layout_marginBottom="15dp"
             app:layout_constraintStart_toEndOf="@id/profileViewCard"
             app:layout_constraintTop_toTopOf="@id/profileViewCard"
             app:layout_constraintBottom_toBottomOf="@id/profileViewCard"
@@ -68,6 +68,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/name"
             android:text="Online"
+            android:visibility="gone"
             android:textSize="10sp"
             android:fontFamily="@font/lato_bold"
             app:layout_constraintTop_toBottomOf="@id/name"

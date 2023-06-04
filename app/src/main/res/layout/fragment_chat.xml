@@ -86,53 +86,103 @@
         android:background="@drawable/chat_background">
 
 
-        <ImageView
-            android:id="@+id/chatImg"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            app:layout_constraintStart_toStartOf="@id/tv"
-            app:layout_constraintEnd_toEndOf="@id/tv"
-            android:src="@drawable/no_conversation_bg"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="70dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-
-        <TextView
-            android:id="@+id/tv"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/emptyChatLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="You didn't made any conversational yet"
-            app:layout_constraintTop_toBottomOf="@id/chatImg"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/secondry_text"
-            android:textSize="15sp"
-            />
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-        <Button
+
+            <ImageView
+                android:id="@+id/chatImg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:layout_constraintStart_toStartOf="@id/tv"
+                app:layout_constraintEnd_toEndOf="@id/tv"
+                android:src="@drawable/no_conversation_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You didn't made any conversational yet"
+                app:layout_constraintTop_toBottomOf="@id/chatImg"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/secondry_text"
+                android:textSize="15sp"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/startConversation"
+                app:layout_constraintTop_toBottomOf="@id/tv"
+                android:background="@drawable/button_background"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                android:text="Start Conversation"
+                app:backgroundTint="@null"
+                android:textStyle="bold"
+                android:fontFamily="@font/lato_bold"
+                android:textColor="@color/white"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/startConversation"
-            app:layout_constraintTop_toBottomOf="@id/tv"
-            android:background="@drawable/button_background"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="10dp"
-            android:text="Start Conversation"
-            app:backgroundTint="@null"
-            android:textStyle="bold"
-            android:fontFamily="@font/lato_bold"
-            android:textColor="@color/white"/>
+            android:layout_height="match_parent"
+            android:id="@+id/message">
+
+            <TextView
+                android:id="@+id/mesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Messages"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="20dp"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:fontFamily="@font/lato_bold"
+                android:textSize="20sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recentMsgRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintTop_toBottomOf="@id/mesText"
+                tools:listitem="@layout/home_chat_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/primary"
+        android:src="@drawable/ic_add"
+        app:tint="@color/white"/>
 
 
 

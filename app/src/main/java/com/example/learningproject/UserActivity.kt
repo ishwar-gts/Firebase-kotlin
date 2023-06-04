@@ -50,7 +50,7 @@ class UserActivity : AppCompatActivity() {
                            val name= item.get(ConstantValue.name).toString()
                            val profileImg= item.get("profileUrl").toString()
                            val phoneNumber= item.get("mobileNumber").toString()
-                           val email=item.get("email").toString();
+                           val email=item.get("email").toString()
                            val userId=item.get(ConstantValue.userid).toString();
                            userList.add(
                                User(

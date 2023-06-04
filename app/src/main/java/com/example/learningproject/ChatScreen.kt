@@ -7,6 +7,9 @@ import com.example.learningproject.Message
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.learningproject.adapter.ChatAdapter
@@ -15,6 +18,7 @@ import com.example.learningproject.constant.ConstantValue
 import com.example.learningproject.constant.PreferenceManager
 import com.example.learningproject.databinding.ActivityChatScreenBinding
 import com.example.learningproject.util.Constant
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.type.DateTime
@@ -41,15 +45,30 @@ class ChatScreen() : AppCompatActivity() {
     private var  messageList:ArrayList<Message> =ArrayList()
     var db=FirebaseFirestore.getInstance()
 
+
+    override fun onStart() {
+        setUserOnline(true)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        setUserOnline(false)
+        super.onStop()
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding= ActivityChatScreenBinding.inflate(layoutInflater)
+
         profileUrl=intent.getStringExtra("profile").toString()
         phoneNumber=intent.getStringExtra("phoneNumber").toString()
         name=intent.getStringExtra("name").toString()
         groupId=intent.getStringExtra("groupId").toString()
         receiverId=intent.getStringExtra("userId").toString()
-        appUserid=PreferenceManager.getString(ConstantValue.userid).toString()
+        Log.d("my user id ", "onCreate: ${PreferenceManager.getString(ConstantValue.userid)}")
+        appUserid=PreferenceManager.getString(ConstantValue.userid)
 
         Glide.with(this).load(profileUrl).centerCrop()
             .placeholder(R.drawable.userimg_removebg)
@@ -66,6 +85,9 @@ class ChatScreen() : AppCompatActivity() {
 
                }
 
+           }else{
+               updateUnReadMessageCount(false)
+               getAllMessages()
            }
 
         }
@@ -73,6 +95,9 @@ class ChatScreen() : AppCompatActivity() {
            CoroutineScope(Dispatchers.IO).launch {
                sendMessage()
            }
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            checkUserAvailable()
         }
         setContentView(binding.root)
 
@@ -85,6 +110,7 @@ class ChatScreen() : AppCompatActivity() {
 
             val memberDetails:MutableMap<String,Any> = mutableMapOf()
             val mainMap:MutableMap<String,Any> = mutableMapOf()
+
             val senderId:MutableMap<String,Any> =mutableMapOf(
             "name" to PreferenceManager.getString(ConstantValue.name),
             "photoUrl" to PreferenceManager.getString(ConstantValue.profileImage),
@@ -115,6 +141,7 @@ class ChatScreen() : AppCompatActivity() {
                it.get().addOnSuccessListener {
                   if(it.size()>0){
                       groupId= it.documents[0].id
+                      updateUnReadMessageCount(false)
                       getAllMessages()
                       Log.d("groupId", "findGroupId: ${groupId}")
                   }else{
@@ -141,6 +168,8 @@ class ChatScreen() : AppCompatActivity() {
              )
              db.collection(ConstantValue.userChats).document(groupId).set(random)
              db.collection(ConstantValue.userChats).document(groupId).collection(ConstantValue.messages).add(messageMap).addOnSuccessListener {
+                 updateUnReadMessageCount(true)
+                 addLastMessage()
                  binding.messageEdit.text.clear()
              }
         }
@@ -187,4 +216,73 @@ class ChatScreen() : AppCompatActivity() {
 
 
 }
+
+       private fun updateUnReadMessageCount(forUpdate:Boolean){
+           db.collection(ConstantValue.GroupCollection).document(groupId).get().addOnSuccessListener {
+               if(it.exists()){
+                   Log.d("receiverId", "receiverId: $receiverId")
+                   val memberDetails=it.get("membersDetail")  as Map<*,*>
+                   val receiverMap=memberDetails.get(appUserid) as Map<*,*>
+                   val unreadCount=receiverMap.get("unReadCount").toString()
+
+                   Log.d("userid", "updateUnReadMessageCount: $appUserid")
+                   Log.d("userid", "updateUnReadMessageCount 2 : $receiverId")
+                    if(forUpdate){
+                       val fieldPath = FieldPath.of("membersDetail",appUserid , "unReadCount")
+                       var updatedCount=unreadCount.toInt()
+
+                        updatedCount += 1
+
+                        db.collection(ConstantValue.GroupCollection).document(groupId).update(fieldPath,updatedCount)
+
+                   }else{
+                       val fieldPath = FieldPath.of("membersDetail", receiverId, "unReadCount")
+                       val updatedCount=0
+                       db.collection(ConstantValue.GroupCollection).document(groupId).update(fieldPath,updatedCount)
+                   }
+               }
+           }
+       }
+
+       private fun addLastMessage(){
+           val msg=binding.messageEdit.text.toString()
+           val lastMessage:MutableMap<String,String> = mutableMapOf(
+               "message" to msg,
+               "date" to System.currentTimeMillis().toString()
+           )
+           db.collection(ConstantValue.GroupCollection).document(groupId).update("lastMessage",lastMessage)
+       }
+
+    private fun setUserOnline(isOnline:Boolean){
+        db.collection(ConstantValue.firebaseUserCollection).document(PreferenceManager.getString(ConstantValue.userid)).update("online",isOnline)
     }
+
+    private fun checkUserAvailable(){
+        val param = binding.name.layoutParams as ViewGroup.MarginLayoutParams
+
+        db.collection(ConstantValue.firebaseUserCollection).document(receiverId).addSnapshotListener { value, error ->
+            value.let {
+                if (it != null) {
+                    if (it.exists()){
+                        val data:Map<*,*> = it.data as Map<*, *>
+                        val isOnline:Boolean = data.get("online") as Boolean
+                        if(isOnline){
+                            binding.online.visibility=View.VISIBLE
+                            val param = binding.name.layoutParams as ViewGroup.MarginLayoutParams
+                            param.setMargins(0,2,0,40)
+                            binding.name.layoutParams = param
+                        }else{
+                            param.setMargins(0,2,0,10)
+                            binding.name.layoutParams = param
+                            binding.online.visibility=View.GONE
+                        }
+
+
+                    }
+                }
+            }
+
+        }
+    }
+    }
+//var data=
